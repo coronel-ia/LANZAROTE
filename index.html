@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lanzarote — 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D0D0D;
+    --bg2: #141414;
+    --bg3: #1E1E1E;
+    --text: #F0EBE0;
+    --muted: #8A8278;
+    --gold: #C9A96E;
+    --gold-dim: rgba(201,169,110,0.15);
+    --border: rgba(240,235,224,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5rem 1.75rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,169,110,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 100% 80% at 80% 80%, rgba(201,169,110,0.04) 0%, transparent 60%);
+  }
+
+  .hero-stamp {
+    position: absolute;
+    top: 2rem;
+    right: 1.75rem;
+    width: 64px;
+    height: 64px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1px;
+    opacity: 0.7;
+  }
+  .hero-stamp span { font-size: 8px; letter-spacing: 0.12em; color: var(--gold); text-transform: uppercase; line-height: 1.3; text-align: center; }
+  .hero-stamp .year { font-size: 13px; font-weight: 500; color: var(--gold); }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 14vw, 6rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    position: relative;
+  }
+
+  .hero-title em {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.6em;
+    color: var(--gold);
+    margin-bottom: 0.1em;
+  }
+
+  .hero-meta {
+    margin-top: 1.75rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    position: relative;
+  }
+
+  .hero-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 240px;
+  }
+
+  .scroll-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .scroll-hint span { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollpulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollpulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  .section { padding: 3rem 1.75rem; }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .story-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    line-height: 1.75;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .story-text em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .gallery-section { padding: 1rem 1.75rem 3rem; }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .photo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--bg3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .photo-card.wide { grid-column: span 2; }
+  .photo-card.revealed { opacity: 1; transform: translateY(0); }
+
+  .photo-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1209 0%, #0d0d0d 100%);
+    z-index: 2;
+    transition: opacity 1.2s ease;
+    opacity: 1;
+  }
+  .photo-card.revealed::before { opacity: 0; }
+
+  .photo-inner {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.85) contrast(1.05);
+  }
+  .photo-card.wide .photo-inner { aspect-ratio: 16/9; }
+
+  .photo-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 0.75rem 0.75rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(240,235,224,0.7);
+    text-transform: uppercase;
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.8s;
+  }
+  .photo-card.revealed .photo-caption { opacity: 1; }
+
+  .photo-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    opacity: 0.3;
+  }
+  .photo-card.wide .photo-placeholder { aspect-ratio: 16/9; }
+
+  .map-section { padding: 0 1.75rem 3rem; }
+  .map-embed {
+    width: 100%;
+    height: 220px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-placeholder { text-align: center; color: var(--muted); }
+  .map-placeholder .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .map-placeholder p { font-size: 12px; line-height: 1.6; }
+  .map-placeholder code {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 10px;
+    color: var(--gold);
+    font-family: monospace;
+    padding: 4px 8px;
+    background: var(--gold-dim);
+    border-radius: 4px;
+  }
+
+  .stats-section { padding: 0 1.75rem 3rem; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .stat {
+    background: var(--bg2);
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .stat-sub { font-size: 10px; color: var(--muted); }
+
+  .edit-banner {
+    margin: 0 1.75rem 2rem;
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+  }
+  .edit-banner p { font-size: 11.5px; color: var(--gold); line-height: 1.6; }
+  .edit-banner strong { font-weight: 500; display: block; margin-bottom: 4px; font-size: 12px; }
+
+  footer {
+    padding: 2rem 1.75rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; color: var(--gold); opacity: 0.7; }
+  .footer-note { font-size: 10px; color: var(--muted); text-align: right; line-height: 1.5; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-card, .photo-card::before, .photo-caption, .scroll-line { transition: none; animation: none; }
+    .photo-card { opacity: 1; transform: none; }
+    .photo-card::before { opacity: 0; }
+    .photo-caption { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-stamp">
+    <span>2025</span>
+    <span class="year">🌋</span>
+    <span>LZT</span>
+  </div>
+
+  <div class="hero-eyebrow">Recuerdo de viaje</div>
+
+  <h1 class="hero-title">
+    <em>Lanzarote</em>
+    Canarias
+  </h1>
+
+  <div class="hero-meta">
+    <p class="hero-desc">Acercaste el móvil al imán y aquí estás. Bienvenido a este viaje.</p>
+    <div class="scroll-hint">
+      <span>Ver</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-label">La historia</div>
+  <p class="story-text">
+    Una isla que no se parece a nada que hayas visto antes.
+    <em>Volcanes, silencio y mar.</em>
+    De la Ruta de los Volcanes al atardecer en Papagayo.
+    De las papas con mojo al vino de la tierra.
+  </p>
+</section>
+
+<section class="gallery-section">
+  <div class="section-label">Las fotos</div>
+  <div class="gallery-grid" id="gallery">
+
+    <div class="photo-card wide" style="transition-delay: 0s">
+      <div class="photo-placeholder">🌋</div>
+      <div class="photo-caption">Parque Nacional de Timanfaya</div>
+    </div>
+
+    <div class="photo-card" style="transition-delay: 0.1s">
+      <div class="photo-placeholder">🌊</div>
+      <div class="photo-caption">Jameos del Agua</div>
+    </div>
+
+    <div class="photo-card" style="transition-delay: 0.2s">
+      <div class="photo-placeholder">🏖️</div>
+      <div class="photo-caption">Playa de Papagayo</div>
+    </div>
+
+    <div class="photo-card" style="transition-delay: 0.3s">
+      <div class="photo-placeholder">🥔</div>
+      <div class="photo-caption">Papas arrugadas con mojo</div>
+    </div>
+
+    <div class="photo-card" style="transition-delay: 0.4s">
+      <div class="photo-placeholder">🌵</div>
+      <div class="photo-caption">Mirador del Río</div>
+    </div>
+
+    <div class="photo-card wide" style="transition-delay: 0.5s">
+      <div class="photo-placeholder">🌅</div>
+      <div class="photo-caption">Atardecer en Puerto Naos</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="map-section">
+  <div class="section-label">El recorrido</div>
+  <div class="map-embed">
+    <div class="map-placeholder">
+      <div class="icon">🗺️</div>
+      <p>Pega aquí el iframe de Google Maps<br>con el recorrido del viaje</p>
+      <code>&lt;!-- Google Maps embed --&gt;</code>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="section-label">Los números</div>
+  <div class="stats-grid">
+    <div class="stat">
+      <span class="stat-label">Días</span>
+      <span class="stat-value">7</span>
+      <span class="stat-sub">en la isla</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Pueblos</span>
+      <span class="stat-value">6</span>
+      <span class="stat-sub">Arrecife · Teguise · Yaiza · Haría · Tinajo · Playa Blanca</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Fotos</span>
+      <span class="stat-value">0</span>
+      <span class="stat-sub">pon las tuyas aquí</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Volcanes</span>
+      <span class="stat-value">300</span>
+      <span class="stat-sub">en la isla (sí, trescientos)</span>
+    </div>
+  </div>
+</section>
+
+<div class="edit-banner">
+  <p>
+    <strong>📝 Cómo personalizar esta página</strong>
+    Reemplaza los emojis por &lt;img src="foto.jpg" class="photo-inner"&gt; con tus fotos reales. Edita la historia y los números. Pega el embed de Google Maps. Súbelo a GitHub Pages y programa el chip NFC con la URL.
+  </p>
+</div>
+
+<footer>
+  <div class="footer-brand">Recuerdos</div>
+  <div class="footer-note">Hecho con un imán<br>y muchas ganas de viajar</div>
+</footer>
+
+<script>
+  const cards = document.querySelectorAll('.photo-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const delay = parseFloat(card.style.transitionDelay || 0) * 1000;
+        setTimeout(() => card.classList.add('revealed'), delay * 0.5);
+        observer.unobserve(card);
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>
